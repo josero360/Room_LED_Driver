@@ -33,7 +33,7 @@ int setLEDoutput(int newAnalog, int oldAnalog, uint8_t outputPIN, float valueGAM
     else{
       // Set output based on a gamma correction with LED threshold correction
       // output = ((input/255)^gamma * 255-LEDthreshold) + LEDthreshold
-      // For futher explanation and visualization look into documentation/Gamma_Cal.xlsx
+      // For futher explanation and visualization look into documentation/Gamma_calculation.pdf
       analogWrite(outputPIN, (int)( (pow((float)newAnalog/255.0, valueGAMMA)*(255.0 - offsetLEDthreshold)) +offsetLEDthreshold)); 
     }
     return newAnalog;
