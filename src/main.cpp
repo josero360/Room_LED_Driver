@@ -22,10 +22,10 @@ int old_A_cw = 0;
  *  @param valueGAMMA Value for gamma correction (typical for LED applications 1.5-3)
  *  @param offsetLEDthreshold Offset value on with the LED will turn on (0-255.0)
 */
-void setLEDoutput(int newAnalog, int oldAnalog, uint8_t outputPIN, float valueGAMMA, float offsetLEDthreshold)
+int setLEDoutput(int newAnalog, int oldAnalog, uint8_t outputPIN, float valueGAMMA, float offsetLEDthreshold)
 {
   // Check if input changed by 4 steps
-  if ((newAnalog - oldAnalog) > 4 || (newAnalog - oldAnalog) < -4)
+  if (((newAnalog - oldAnalog) > 4) || ((newAnalog - oldAnalog) < -4))
   {
     if (newAnalog < 4){
       analogWrite(outputPIN, 0);
@@ -36,8 +36,9 @@ void setLEDoutput(int newAnalog, int oldAnalog, uint8_t outputPIN, float valueGA
       // For futher explanation and visualization look into documentation/Gamma_Cal.xlsx
       analogWrite(outputPIN, (int)( (pow((float)newAnalog/255.0, valueGAMMA)*(255.0 - offsetLEDthreshold)) +offsetLEDthreshold)); 
     }
-    oldAnalog = newAnalog;
+    return newAnalog;
   }
+  return oldAnalog;
 }
 
 void setup() 
@@ -51,10 +52,11 @@ void setup()
   pinMode(PIN_PWM_CW, OUTPUT);
 }
 
-void loop() {
+void loop() 
+{
   A_ww = (analogRead(PIN_POTI_WW)/4);
   A_cw = (analogRead(PIN_POTI_CW)/4);
-  setLEDoutput(A_ww, old_A_ww, PIN_PWM_WW, GAMMA_WW_VALUE, GAMMA_WW_OFFSET);
-  setLEDoutput(A_cw, old_A_cw, PIN_PWM_CW, GAMMA_CW_VAlUE, GAMMA_CW_OFFSET);
+  old_A_ww = setLEDoutput(A_ww, old_A_ww, PIN_PWM_WW, GAMMA_WW_VALUE, GAMMA_WW_OFFSET);
+  old_A_cw = setLEDoutput(A_cw, old_A_cw, PIN_PWM_CW, GAMMA_CW_VAlUE, GAMMA_CW_OFFSET);
   delay(25);   // 100ms
 }
