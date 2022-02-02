@@ -1,0 +1,25 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[ngerman]{babel}	        % Worttrennung nach deutschen Standrats
+\usepackage[utf8]{inputenc}         % umlaute
+\usepackage[T1]{fontenc}	        % deutsche Schriftzeichen
+\usepackage{longtable}
+\usepackage{amsmath}
+\usepackage{setspace}
+
+\begin{document}
+
+\begin{equation}
+    bit_{out} = \left( \left(\dfrac{bit_{in}}{bit_{out,max}} \right)^{gamma} \cdot 
+        (bit_{out,max} - bit_{out,threshold}) \right) + bit_{out,threshold}
+\end{equation}
+
+\indent $bit_{out}$: Output value (e.g. PWM output to driver)\\
+\indent $bit_{out,max}$: Output maximum value (e.g. 8-bit $\mu$C = 255) \\
+\indent $bit_{in}$: Input value, $bit_{in,max} = bit_{out,max}$ \\
+\indent $gamma$: Gamma factor (1,5 to 3)\\
+\indent $bit_{out,threshold}$:\\
+
+\newpage
+\input{value_table.tex}
+
+\end{document}
