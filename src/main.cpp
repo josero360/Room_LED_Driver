@@ -4,6 +4,8 @@
 #define PIN_PWM_CW 5
 #define PIN_POTI_WW A0 
 #define PIN_POTI_CW A1  
+#define GAMMA_WW 2
+#define GAMMA_CW 2
 
 int A_ww = 0;
 int A_cw = 0;
@@ -26,7 +28,7 @@ void loop() {
       analogWrite(PIN_PWM_WW, 0);
     }
     else{
-      analogWrite(PIN_PWM_WW, (int)( (pow((float)A_ww/255.0, 1.5)*230.0) +25.0 )); 
+      analogWrite(PIN_PWM_WW, (int)( (pow((float)A_ww/255.0, GAMMA_WW)*230.0) +25.0 )); 
     }
     old_A_ww = A_ww;
   }
@@ -36,7 +38,7 @@ void loop() {
       analogWrite(PIN_PWM_CW, 0);
     }
     else{
-      analogWrite(PIN_PWM_CW, (int)( (pow((float)A_cw/255.0, 1.5)*230.0) +25.0 ));
+      analogWrite(PIN_PWM_CW, (int)( (pow((float)A_cw/255.0, GAMMA_CW)*230.0) +25.0 ));
     }
     old_A_cw = A_cw;
   }
