@@ -22,7 +22,7 @@ int old_A_cw = 0;
  *  @param valueGAMMA Value for gamma correction (typical for LED applications 1.5-3)
  *  @param offsetLEDthreshold Offset value on with the LED will turn on (0-255.0)
 */
-int setLEDoutput(int newAnalog, int oldAnalog, uint8_t outputPIN, float valueGAMMA, float offsetLEDthreshold)
+int setLEDoutput(const int newAnalog, const int oldAnalog, const uint8_t outputPIN, const float valueGAMMA, const float offsetLEDthreshold)
 {
   // Check if input changed by 4 steps
   if (((newAnalog - oldAnalog) > 4) || ((newAnalog - oldAnalog) < -4))
