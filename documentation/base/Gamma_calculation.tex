@@ -1,25 +1,68 @@
 \documentclass[11pt,a4paper]{article}
+\setlength{\parindent}{0em} 
 \usepackage[ngerman]{babel}	        % Worttrennung nach deutschen Standrats
 \usepackage[utf8]{inputenc}         % umlaute
 \usepackage[T1]{fontenc}	        % deutsche Schriftzeichen
 \usepackage{longtable}
 \usepackage{amsmath}
 \usepackage{setspace}
+\usepackage{pgfplots}               % for .csv plot
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{left=2.5cm, top=2cm, bottom=2cm, right=2cm}
+
+\title{A brief comment of my gamma correction}
+\author{Johannes Rothe} 
+
 
 \begin{document}
+\maketitle 
+\section{Explanation}
+The equation \ref{eq:bit_out} shows how the basic calculation of $bit_{out}$.
+The logarithmic function can be vertical adjust with the bit $bit_{out,threshold}$ (equation \ref{eq:bit_out_threshold}).
+Therefor threshold parameters in LED drivers can be compensated.
 
-\begin{equation}
-    bit_{out} = \left( \left(\dfrac{bit_{in}}{bit_{out,max}} \right)^{gamma} \cdot 
+\begin{align} 
+    \label{eq:bit_out}
+    bit_{out} &= \left(\dfrac{bit_{in}}{bit_{out,max}} \right)^{gamma} \cdot 
+        bit_{out,max} \\
+    \label{eq:bit_out_threshold}
+    bit_{out} &= \left( \left(\dfrac{bit_{in}}{bit_{out,max}} \right)^{gamma} \cdot 
         (bit_{out,max} - bit_{out,threshold}) \right) + bit_{out,threshold}
-\end{equation}
+\end{align}
 
 \indent $bit_{out}$: Output value (e.g. PWM output to driver)\\
-\indent $bit_{out,max}$: Output maximum value (e.g. 8-bit $\mu$C = 255) \\
+\indent $bit_{out,max}$: Output maximum value (e.g. 8-bit MCU = 255) \\
 \indent $bit_{in}$: Input value, $bit_{in,max} = bit_{out,max}$ \\
 \indent $gamma$: Gamma factor (1,5 to 3)\\
-\indent $bit_{out,threshold}$:\\
+\indent $bit_{out,threshold}$: Value to adjust the output offset \\
 
-\newpage
-\input{value_table.tex}
+\subsection{Example}
+An example for a 8-bit MCU, $gamma = 1.5$ and $bit_{out,threshold} = 18$.\\
+\begin{equation}\label{eq:ex}
+    bit_{out} = \left( \left(\dfrac{bit_{in}}{255} \right)^{1,5} \cdot 
+        (255 - 18) \right) + 18
+\end{equation}
 
+\begin{tikzpicture}
+    \begin{axis}[
+        width=.9\textwidth,
+        title=Example for equation \ref{eq:ex},  
+        xlabel={Input [bit]},
+        ylabel={Output [bit]},
+        legend style={at={(0.98,0.3)},anchor=south east},
+        grid=both,
+        xtick={0,50,100,150,200,250},
+        ytick={0,50,100,150,200,250},
+        xmin=0, xmax=255,
+        ymin=0, ymax=255]
+        \addplot[red, ultra thick] table[col sep=comma,x index=0 ,y index=4] {Gamma_Cal.CSV};
+        \addlegendentry{Function of equation \ref{eq:ex}}
+        \addplot[black!30] table[col sep=comma,x index=0 ,y index=0] {Gamma_Cal.CSV};
+        \addlegendentry{Function f(x) = y}
+    \end{axis}
+\end{tikzpicture}
+
+% \newpage
+% \input{value_table.tex}
 \end{document}
