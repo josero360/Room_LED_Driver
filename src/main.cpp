@@ -9,6 +9,7 @@
 #define GAMMA_CW_VAlUE 1.5
 #define GAMMA_WW_OFFSET 22.0
 #define GAMMA_CW_OFFSET 22.0
+#define DIFF_OLD_TO_NEW 9
 
 int A_ww = 0;
 int A_cw = 0;
@@ -25,9 +26,9 @@ int old_A_cw = 0;
 int setLEDoutput(const int newAnalog, const int oldAnalog, const uint8_t outputPIN, const float valueGAMMA, const float offsetLEDthreshold)
 {
   // Check if input changed by 4 steps
-  if (((newAnalog - oldAnalog) > 4) || ((newAnalog - oldAnalog) < -4))
+  if (((newAnalog - oldAnalog) > DIFF_OLD_TO_NEW) || ((newAnalog - oldAnalog) < -DIFF_OLD_TO_NEW))
   {
-    if (newAnalog < 4){
+    if (newAnalog < DIFF_OLD_TO_NEW){
       analogWrite(outputPIN, 0);
     }
     else{
@@ -50,6 +51,8 @@ void setup()
   TCCR0B = (TCCR0B & B11111000) | B00000100;
   pinMode(PIN_PWM_WW, OUTPUT);
   pinMode(PIN_PWM_CW, OUTPUT);
+  Serial.begin(115200);
+  Serial.println("Value Test");
 }
 
 void loop() 
@@ -59,4 +62,8 @@ void loop()
   old_A_ww = setLEDoutput(A_ww, old_A_ww, PIN_PWM_WW, GAMMA_WW_VALUE, GAMMA_WW_OFFSET);
   old_A_cw = setLEDoutput(A_cw, old_A_cw, PIN_PWM_CW, GAMMA_CW_VAlUE, GAMMA_CW_OFFSET);
   delay(25);   // 100ms
+  Serial.print("WW: ");
+  Serial.print(old_A_ww);
+  Serial.print(", CW: ");
+  Serial.println(old_A_cw);
 }
